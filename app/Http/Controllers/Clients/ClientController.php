@@ -39,7 +39,8 @@ class ClientController extends Controller
     {
         try {
             $clients = Client::where('user_id', Auth::user()->id)->get();
-            return ResponseHelper::Out(true,$clients, 200);
+
+            return ResponseHelper::Out(true, $clients, 200);
         } catch (Exception $e) {
             return ResponseHelper::Out(false, 'Failed to Retrieve Clients, Please Try Again.', 500);
         }
@@ -51,9 +52,10 @@ class ClientController extends Controller
     {
         try {
             $client = Client::where('user_id', Auth::user()->id)->where('id', $request->id)->first();
-            if (!$client) {
+            if (! $client) {
                 return ResponseHelper::Out(false, 'Client Not Found', 404);
             }
+
             return ResponseHelper::Out(true, $client, 200);
         } catch (Exception $e) {
             return ResponseHelper::Out(false, 'Failed to Retrieve Client, Please Try Again.', 500);
@@ -66,12 +68,12 @@ class ClientController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:clients,email,' . $request->id,
+            'email' => 'required|email|max:255|unique:clients,email,'.$request->id,
             'contact_person' => 'nullable|string|max:255',
         ]);
         try {
             $client = Client::where('user_id', Auth::user()->id)->where('id', $request->id)->first();
-            if (!$client) {
+            if (! $client) {
                 return ResponseHelper::Out(false, 'Client Not Found', 404);
             }
             $client->update([
@@ -92,7 +94,7 @@ class ClientController extends Controller
     {
         try {
             $client = Client::where('user_id', Auth::user()->id)->where('id', $request->id)->first();
-            if (!$client) {
+            if (! $client) {
                 return ResponseHelper::Out(false, 'Client Not Found', 404);
             }
             $client->delete();
@@ -109,9 +111,10 @@ class ClientController extends Controller
     {
         try {
             $deleted = Client::where('user_id', Auth::id())->delete();
-            if (!$deleted) {
+            if (! $deleted) {
                 return ResponseHelper::Out(false, 'No Clients Found to Delete', 404);
             }
+
             return ResponseHelper::Out(true, 'All Clients Deleted Successfully', 200);
         } catch (Exception $e) {
             return ResponseHelper::Out(false, 'Failed to Delete Clients, Please Try Again.', 500);
