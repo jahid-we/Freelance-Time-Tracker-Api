@@ -50,7 +50,7 @@ class AuthController extends Controller
                 $user = Auth::user();
                 $token = $user->createToken('auth_token')->plainTextToken;
 
-                return ResponseHelper::Out(true, 'Login Successful',200,$token);
+                return ResponseHelper::Out(true, 'Login Successful', 200, $token);
             } else {
                 return ResponseHelper::Out(false, 'Invalid Credentials', 401);
             }
@@ -65,6 +65,7 @@ class AuthController extends Controller
     {
         try {
             $request->user()->currentAccessToken()->delete();
+
             return ResponseHelper::Out(true, 'Logout Successful', 200);
         } catch (Exception $e) {
             return ResponseHelper::Out(false, 'Logout Failed, Please Try Again.', 500);
