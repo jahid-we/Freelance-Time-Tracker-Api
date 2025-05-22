@@ -3,6 +3,7 @@
 use App\Http\Controllers\Authentication\AuthController;
 use App\Http\Controllers\Clients\ClientController;
 use App\Http\Controllers\Projects\ProjectController;
+use App\Http\Controllers\TimeLogs\TimeLogController;
 use Illuminate\Support\Facades\Route;
 
 // Route::controller()->group(function () {});
@@ -40,5 +41,13 @@ Route::middleware('auth:sanctum')->controller(ProjectController::class)->group(f
     Route::get('/delete-project/{id}', 'deleteProject')->name('delete-project');
     Route::get('/delete-all-projects', 'deleteAllProjects')->name('delete-all-projects');
     Route::get('/get-projects-by-client/{clientId}', 'getProjectsByClient')->name('get-projects-by-client');
+
+});
+
+Route::middleware('auth:sanctum')->controller(TimeLogController::class)->group(function () {
+
+    Route::post('/start-timelog/{projectId}', 'start')->name('start-timelog');
+    Route::post('/end-timelog/{projectId}', 'end')->name('end-timelog');
+    Route::post('/manual-entry/{projectId}', 'manualEntry')->name('manual-entry');
 
 });

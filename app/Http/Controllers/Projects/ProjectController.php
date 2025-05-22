@@ -6,6 +6,7 @@ use App\Helper\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\Project;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -42,7 +43,7 @@ class ProjectController extends Controller
 
         } catch (ValidationException $e) {
             return ResponseHelper::Out(false, $e->errors(), 422);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return ResponseHelper::Out(false, 'Project creation failed', 500);
         }
     }
@@ -54,9 +55,7 @@ class ProjectController extends Controller
         try {
             $userId = auth()->id();
 
-            $projects = Project::whereHas('client', function ($q) use ($userId) {
-                $q->where('user_id', $userId);
-            })
+            $projects = Project::whereHas('client', fn ($q) => $q->where('user_id', $userId))
                 ->with('client')
                 ->get();
 
@@ -73,9 +72,7 @@ class ProjectController extends Controller
         try {
             $userId = auth()->id();
 
-            $project = Project::where('id', $request->id)->whereHas('client', function ($q) use ($userId) {
-                $q->where('user_id', $userId);
-            })->with('client')->first();
+            $project = Project::where('id', $request->id)->whereHas('client', fn ($q) => $q->where('user_id', $userId))->with('client')->first();
 
             if (! $project) {
                 return ResponseHelper::Out(false, 'Project not found', 404);
@@ -103,9 +100,7 @@ class ProjectController extends Controller
             $userId = auth()->id();
 
             $project = Project::where('id', $request->id)
-                ->whereHas('client', function ($q) use ($userId) {
-                    $q->where('user_id', $userId);
-                })->first();
+                ->whereHas('client', fn ($q) => $q->where('user_id', $userId))->first();
 
             if (! $project) {
                 return ResponseHelper::Out(false, 'Project not found', 404);
@@ -130,7 +125,6 @@ class ProjectController extends Controller
     }
     // Update a project End **********************************
 
-
     // Delete a project Start ********************************
     public function deleteProject(Request $request)
     {
@@ -138,9 +132,7 @@ class ProjectController extends Controller
             $userId = auth()->id();
 
             $project = Project::where('id', $request->id)
-                ->whereHas('client', function ($q) use ($userId) {
-                    $q->where('user_id', $userId);
-                })->first();
+                ->whereHas('client', fn ($q) => $q->where('user_id', $userId))->first();
 
             if (! $project) {
                 return ResponseHelper::Out(false, 'Project not found', 404);
@@ -161,9 +153,7 @@ class ProjectController extends Controller
         try {
             $userId = auth()->id();
 
-            $deleted = Project::whereHas('client', function ($q) use ($userId) {
-                $q->where('user_id', $userId);
-            })->delete();
+            $deleted = Project::whereHas('client', fn ($q) => $q->where('user_id', $userId))->delete();
 
             return ResponseHelper::Out(true, 'All projects deleted successfully', 200);
         } catch (Exception $e) {
@@ -179,9 +169,7 @@ class ProjectController extends Controller
             $userId = auth()->id();
 
             $projects = Project::where('client_id', $request->clientId)
-                ->whereHas('client', function ($q) use ($userId) {
-                    $q->where('user_id', $userId);
-                })->with('client')->get();
+                ->whereHas('client', fn ($q) => $q->where('user_id', $userId))->with('client')->get();
 
             return ResponseHelper::Out(true, $projects, 200);
         } catch (Exception $e) {

@@ -14,6 +14,7 @@ class timeLogSeeder extends Seeder
     {
         for ($i = 1; $i <= 10; $i++) {
             TimeLog::create([
+                'user_id' => 1,
                 'project_id' => $i,
                 'start_time' => now()->subHours(rand(1, 10)),
                 'end_time' => now()->subHours(rand(1, 10)),
