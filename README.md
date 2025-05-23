@@ -121,18 +121,18 @@ git clone https://github.com/jahid-we/Freelance-Time-Tracker-Api.git
 cd freelance-time-tracker
 
 
-**2 Install Dependencies**
-composer install
+- **2 Install Dependencies**
+    composer install
 
-**3 Create .env file**
-cp .env.example .env
+- **3 Create .env file**
+    cp .env.example .env
 
-**4 Generate App Key**
-php artisan key:generate
+- **4 Generate App Key**
+    php artisan key:generate
 
-**5 Migrate Database**
-php artisan migrate --seed
+- **5 Migrate Database**
+    php artisan migrate --seed
 
-**6 Start Development Server**
-php artisan serve
+- **6 Start Development Server**
+    php artisan serve
 
