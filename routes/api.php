@@ -27,8 +27,8 @@ Route::middleware('auth:sanctum')->controller(ClientController::class)->group(fu
     Route::get('/get-clients', 'getClients')->name('get-clients');
     Route::get('/get-client/{id}', 'getClient')->name('get-client');
     Route::post('/update-client/{id}', 'updateClient')->name('update-client');
-    Route::get('/delete-client/{id}', 'deleteClient')->name('delete-client');
-    Route::get('/delete-all-clients', 'deleteAllClients')->name('delete-all-clients');
+    Route::delete('/delete-client/{id}', 'deleteClient')->name('delete-client');
+    Route::delete('/delete-all-clients', 'deleteAllClients')->name('delete-all-clients');
 
 });
 
@@ -38,8 +38,8 @@ Route::middleware('auth:sanctum')->controller(ProjectController::class)->group(f
     Route::get('/get-all-projects', 'getAllProjects')->name('get-all-projects');
     Route::get('/get-project/{id}', 'getProject')->name('get-project');
     Route::post('/update-project/{id}', 'updateProject')->name('update-project');
-    Route::get('/delete-project/{id}', 'deleteProject')->name('delete-project');
-    Route::get('/delete-all-projects', 'deleteAllProjects')->name('delete-all-projects');
+    Route::delete('/delete-project/{id}', 'deleteProject')->name('delete-project');
+    Route::delete('/delete-all-projects', 'deleteAllProjects')->name('delete-all-projects');
     Route::get('/get-projects-by-client/{clientId}', 'getProjectsByClient')->name('get-projects-by-client');
 
 });
@@ -49,5 +49,11 @@ Route::middleware('auth:sanctum')->controller(TimeLogController::class)->group(f
     Route::post('/start-timelog/{projectId}', 'start')->name('start-timelog');
     Route::post('/end-timelog/{projectId}', 'end')->name('end-timelog');
     Route::post('/manual-entry/{projectId}', 'manualEntry')->name('manual-entry');
+    Route::get('/get-timelogs', 'getTimeLogs')->name('get-timelogs');
+    Route::get('/get-timelog/{id}', 'getTimeLogById')->name('get-timelog');
+    Route::post('/update-timelog/{id}', 'update')->name('update-timelog');
+    Route::delete('/delete-timelog/{id}', 'delete')->name('delete-timelog');
+    Route::delete('/delete-all-timelogs', 'deleteAll')->name('delete-all-timelogs');
+
 
 });

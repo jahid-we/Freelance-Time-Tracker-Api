@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\TimeLogs;
 
-use App\Helper\ResponseHelper;
-use App\Http\Controllers\Controller;
+use Exception;
+use Carbon\Carbon;
 use App\Models\Project;
 use App\Models\TimeLog;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Helper\ResponseHelper;
+use App\Http\Controllers\Controller;
 use Illuminate\Validation\ValidationException;
 
 class TimeLogController extends Controller
@@ -61,7 +62,7 @@ class TimeLogController extends Controller
         try {
             $userId = auth()->id();
             $projectId = $request->projectId;
-            $timeLog = TimeLog::where('project_id', $projectId)->where('user_id', $userId)->whereNull('end_time')->firstOrFail();
+            $timeLog = TimeLog::where('project_id', $projectId)->where('user_id', $userId)->whereNull('end_time')->first();
             if (! $timeLog) {
                 return ResponseHelper::Out(false, 'Invalid Project ID', 403);
             }
@@ -113,4 +114,100 @@ class TimeLogController extends Controller
         }
     }
     // Manual Entry End ***************************************
+
+    // Get Time Logs Start ***********************************
+    public function getTimeLogs(Request $request)
+    {
+        try {
+            $userId = auth()->id();
+            $timeLogs = TimeLog::where('user_id', $userId)->with('project')->get();
+
+            return ResponseHelper::Out(true,$timeLogs, 200);
+        } catch (Exception $e) {
+            return ResponseHelper::Out(false, 'Failed to retrieve time logs', 500);
+        }
+    }
+    // Get Time Logs End ***************************************
+
+    // Get Time Log By Id Start ********************************
+    public function getTimeLogById(Request $request)
+    {
+        try {
+            $userId = auth()->id();
+            $timeLog = TimeLog::where('id', $request->id)->where('user_id', $userId)->with('project')->first();
+            if (! $timeLog) {
+                return ResponseHelper::Out(false, 'Invalid time log ID', 403);
+            }
+            return ResponseHelper::Out(true, $timeLog, 200);
+        } catch (Exception $e) {
+            return ResponseHelper::Out(false, 'Failed to retrieve time log', 500);
+        }
+    }
+    // Get Time Log By Id End ***********************************
+
+    // Update Time Log Start ***********************************
+    public function update(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'start_time' => 'required|date',
+                'end_time' => 'required|date|after:start_time',
+                'description' => 'nullable|string|max:255',
+                'tags' => 'nullable|in:billable,non-billable',
+            ]);
+            $userId = auth()->id();
+            $timeLog = TimeLog::where('id', $request->id)->where('user_id', $userId)->first();
+            if (! $timeLog) {
+                return ResponseHelper::Out(false, 'Invalid time log ID', 403);
+            }
+            $start = Carbon::parse($validated['start_time']);
+            $end = Carbon::parse($validated['end_time']);
+            $hours = $start->floatDiffInHours($end);
+            $timeLog->update([
+                'start_time' => $start,
+                'end_time' => $end,
+                'description' => $validated['description'] ?? null,
+                'hours' => $hours,
+                'tags' => $validated['tags'] ?? null,
+            ]);
+            return ResponseHelper::Out(true, 'Time log updated successfully', 200);
+        } catch (ValidationException $e) {
+            return ResponseHelper::Out(false, $e->errors(), 422);
+        } catch (Exception $e) {
+            return ResponseHelper::Out(false, 'Failed to update time log', 500);
+        }
+    }
+    // Update Time Log End ***********************************
+
+    // Delete Time Log Start ***********************************
+    public function delete(Request $request)
+    {
+        try {
+            $userId = auth()->id();
+            $timeLog = TimeLog::where('id', $request->id)->where('user_id', $userId)->first();
+            if (! $timeLog) {
+                return ResponseHelper::Out(false, 'Invalid time log ID', 403);
+            }
+            $timeLog->delete();
+
+            return ResponseHelper::Out(true, 'Time log deleted successfully', 200);
+        } catch (Exception $e) {
+            return ResponseHelper::Out(false, 'Failed to delete time log', 500);
+        }
+    }
+    // Delete Time Log End ***********************************
+
+    // Delete All Time Logs Start ***********************************
+    public function deleteAll(Request $request)
+    {
+        try {
+            $userId = auth()->id();
+            TimeLog::where('user_id', $userId)->delete();
+
+            return ResponseHelper::Out(true, 'All time logs deleted successfully', 200);
+        } catch (Exception $e) {
+            return ResponseHelper::Out(false, 'Failed to delete all time logs', 500);
+        }
+    }
+    // Delete All Time Logs End ***********************************
 }

@@ -25,30 +25,47 @@ This is a RESTful API built with Laravel that allows freelancers to track and ma
 
 ## 🧑‍💻 API Endpoints
 
-### Authentication Routes
+### 🔐 Authentication Routes
 
 - `POST /api/register` — Register a new freelancer.
 - `POST /api/login` — Login a freelancer.
-- `POST /api/logout` — Logout a freelancer (protected by `auth:sanctum`).
+- `POST /api/logout` — Logout a freelancer (requires `auth:sanctum`).
 
-### Client Routes
+---
 
-- `POST /api/create-client` — Create a new client (protected by `auth:sanctum`).
-- `GET /api/get-clients` — Get all clients (protected by `auth:sanctum`).
-- `GET /api/get-client/{id}` — Get a single client by ID (protected by `auth:sanctum`).
-- `POST /api/update-client/{id}` — Update a client by ID (protected by `auth:sanctum`).
-- `GET /api/delete-client/{id}` — Delete a client by ID (protected by `auth:sanctum`).
-- `GET /api/delete-all-clients` — Delete all clients (protected by `auth:sanctum`).
+### 👤 Client Routes (require `auth:sanctum`)
 
-### Project Routes
+- `POST /api/create-client` — Create a new client.
+- `GET /api/get-clients` — List all clients.
+- `GET /api/get-client/{id}` — View a specific client.
+- `POST /api/update-client/{id}` — Update a client.
+- `DELETE /api/delete-client/{id}` — Delete a client.
+- `DELETE /api/delete-all-clients` — Delete all clients.
 
-- `POST /api/create-project` — Create a new project (protected by `auth:sanctum`).
-- `GET /api/get-all-projects` — Get all projects (protected by `auth:sanctum`).
-- `GET /api/get-project/{id}` — Get a single project by ID (protected by `auth:sanctum`).
-- `POST /api/update-project/{id}` — Update a project by ID (protected by `auth:sanctum`).
-- `GET /api/delete-project/{id}` — Delete a project by ID (protected by `auth:sanctum`).
-- `GET /api/delete-all-projects` — Delete all projects (protected by `auth:sanctum`).
-- `GET /api/get-projects-by-client/{clientId}` — Get all projects by a specific client (protected by `auth:sanctum`).
+---
+
+### 📁 Project Routes (require `auth:sanctum`)
+
+- `POST /api/create-project` — Create a new project.
+- `GET /api/get-all-projects` — List all projects.
+- `GET /api/get-project/{id}` — View a specific project.
+- `POST /api/update-project/{id}` — Update a project.
+- `DELETE /api/delete-project/{id}` — Delete a project.
+- `DELETE /api/delete-all-projects` — Delete all projects.
+- `GET /api/get-projects-by-client/{clientId}` — Get all projects by client ID.
+
+---
+
+### ⏱️ Time Log Routes (require `auth:sanctum`)
+
+- `POST /api/start-timelog/{projectId}` — Start a new time log for a project.
+- `POST /api/end-timelog/{projectId}` — End the current active time log.
+- `POST /api/manual-entry/{projectId}` — Create a manual time log.
+- `GET /api/get-timelogs` — List all time logs.
+- `GET /api/get-timelog/{id}` — View a specific time log.
+- `POST /api/update-timelog/{id}` — Update a time log.
+- `DELETE /api/delete-timelog/{id}` — Delete a time log.
+- `DELETE /api/delete-all-timelogs` — Delete all time logs.
 
 ---
 
@@ -78,6 +95,18 @@ This is a RESTful API built with Laravel that allows freelancers to track and ma
 - `description` (text)
 - `status` (string: active/completed)
 - `deadline` (date)
+- `created_at` (timestamp)
+- `updated_at` (timestamp)
+
+### Time Logs
+- `id` (primary key)
+- `user_id` (foreign key to `users` table)
+- `project_id` (foreign key to `projects` table)
+- `start_time` (timestamp, nullable)
+- `end_time` (timestamp, nullable)
+- `description` (text, nullable)
+- `hours` (decimal, 8, 2)
+- `tags` (enum: billable, non-billable, nullable)
 - `created_at` (timestamp)
 - `updated_at` (timestamp)
 
