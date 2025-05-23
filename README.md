@@ -136,3 +136,4 @@ cd freelance-time-tracker
 - **6 Start Development Server**
     php artisan serve
 
+---
