@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\TimeLogs;
 
-use Exception;
-use Carbon\Carbon;
-use App\Models\Project;
-use App\Models\TimeLog;
-use Illuminate\Http\Request;
 use App\Helper\ResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Project;
+use App\Models\TimeLog;
+use App\Notifications\DailyWorkLimitExceeded;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class TimeLogController extends Controller
@@ -35,6 +36,15 @@ class TimeLogController extends Controller
                 ->exists();
             if ($isRunning) {
                 return ResponseHelper::Out(false, 'A time log is already running for this project', 403);
+            }
+            // define today's date for checking hours
+            $logDate = Carbon::today()->toDateString();
+            $totalHours = TimeLog::whereDate('start_time', $logDate)
+                ->where('user_id', $userId)
+                ->sum('hours');
+            // Check if the user has exceeded the daily work limit
+            if ($totalHours > 8) {
+                auth()->user()->notify(new DailyWorkLimitExceeded($logDate, $totalHours));
             }
 
             TimeLog::create([
@@ -106,6 +116,16 @@ class TimeLogController extends Controller
                 'tags' => $validated['tags'] ?? null,
             ]);
 
+            // define today's date for checking hours
+            $logDate = $start->toDateString();
+            $totalHours = TimeLog::whereDate('start_time', $logDate)
+                ->where('user_id', $userId)
+                ->sum('hours');
+            // Check if the user has exceeded the daily work limit
+            if ($totalHours > 8) {
+                auth()->user()->notify(new DailyWorkLimitExceeded($logDate, $totalHours));
+            }
+
             return ResponseHelper::Out(true, 'Time log created successfully', 201);
         } catch (ValidationException $e) {
             return ResponseHelper::Out(false, $e->errors(), 422);
@@ -122,7 +142,7 @@ class TimeLogController extends Controller
             $userId = auth()->id();
             $timeLogs = TimeLog::where('user_id', $userId)->with('project')->get();
 
-            return ResponseHelper::Out(true,$timeLogs, 200);
+            return ResponseHelper::Out(true, $timeLogs, 200);
         } catch (Exception $e) {
             return ResponseHelper::Out(false, 'Failed to retrieve time logs', 500);
         }
@@ -138,6 +158,7 @@ class TimeLogController extends Controller
             if (! $timeLog) {
                 return ResponseHelper::Out(false, 'Invalid time log ID', 403);
             }
+
             return ResponseHelper::Out(true, $timeLog, 200);
         } catch (Exception $e) {
             return ResponseHelper::Out(false, 'Failed to retrieve time log', 500);
@@ -170,6 +191,18 @@ class TimeLogController extends Controller
                 'hours' => $hours,
                 'tags' => $validated['tags'] ?? null,
             ]);
+
+            // define today's date for checking hours
+            $logDate = $start->toDateString();
+            $totalHours = TimeLog::whereDate('start_time', $logDate)
+                ->where('user_id', $userId)
+                ->sum('hours');
+            // Check if the user has exceeded the daily work limit
+            if ($totalHours > 8) {
+                auth()->user()->notify(new DailyWorkLimitExceeded($logDate, $totalHours));
+            }
+
+            // If the time log was updated successfully, return a success response
             return ResponseHelper::Out(true, 'Time log updated successfully', 200);
         } catch (ValidationException $e) {
             return ResponseHelper::Out(false, $e->errors(), 422);

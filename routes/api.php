@@ -55,5 +55,4 @@ Route::middleware('auth:sanctum')->controller(TimeLogController::class)->group(f
     Route::delete('/delete-timelog/{id}', 'delete')->name('delete-timelog');
     Route::delete('/delete-all-timelogs', 'deleteAll')->name('delete-all-timelogs');
 
-
 });
