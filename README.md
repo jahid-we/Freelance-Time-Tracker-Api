@@ -13,6 +13,9 @@ This is a RESTful API built with Laravel that allows freelancers to track and ma
 - **Projects Management:**
   - Create, update, delete, and list projects, including filtering by client.
 
+- **Notifications**:
+  - Sends a queued email notification when a user exceeds 8 daily work hours.
+
 ---
 
 ## 🛠️ Tech Stack
@@ -20,6 +23,8 @@ This is a RESTful API built with Laravel that allows freelancers to track and ma
 - **Laravel 12**
 - **Sanctum** for authentication
 - **Eloquent ORM** for database interaction
+- **Laravel Queues** (with `database` driver)
+- **Notification System** for email alerts
 
 ---
 
@@ -66,6 +71,9 @@ This is a RESTful API built with Laravel that allows freelancers to track and ma
 - `POST /api/update-timelog/{id}` — Update a time log.
 - `DELETE /api/delete-timelog/{id}` — Delete a time log.
 - `DELETE /api/delete-all-timelogs` — Delete all time logs.
+
+> ⏰ Note: If a user logs more than 8 hours in a single day (via start, manual entry, or update), an email notification is automatically queued and sent.
+
 
 ---
 
@@ -133,6 +141,9 @@ cd freelance-time-tracker
 **5 Migrate Database**
     php artisan migrate --seed
 
-**6 Start Development Server**
+**6 Start Queue Worker**
+    php artisan queue:work
+
+**7 Start Development Server**
     php artisan serve
 
