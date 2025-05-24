@@ -243,4 +243,30 @@ class TimeLogController extends Controller
         }
     }
     // Delete All Time Logs End ***********************************
+
+
+    // Search Time Logs By Per Day and Week Start *****************
+    public function search(Request $request)
+    {
+        try {
+            $query = TimeLog::query()->where('user_id', auth()->id());
+
+            if ($request->filled('date')) {
+                $query->whereDate('start_time', Carbon::parse($request->date));
+            }
+
+            if ($request->filled('from') && $request->filled('to')) {
+                $from = Carbon::parse($request->from)->startOfDay();
+                $to = Carbon::parse($request->to)->endOfDay();
+                $query->whereBetween('start_time', [$from, $to]);
+            }
+            $logs = $query->with('project')->orderBy('start_time', 'desc')->get();
+
+            return ResponseHelper::Out(true, $logs, 200);
+
+        } catch (Exception $e) {
+            return ResponseHelper::Out(false, 'Failed to search time logs', 500);
+        }
+    }
+    // Search Time Logs By Per Day and Week End *****************
 }
