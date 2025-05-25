@@ -164,3 +164,7 @@ php artisan serve
 
 👉 [Click here to open the Postman Collection](https://www.postman.com/jahidhasan37/workspace/laravel-jahid/collection/32325662-ab500bb0-493d-4985-92a9-b706217905b7?action=share&creator=32325662&active-environment=32325662-1ca1441b-aa03-45ce-9924-a4616d2eb092)
 
+
+---
+
+© 2025 SKIFF Technologies. Developed by Jahid Hasan. All rights reserved.
