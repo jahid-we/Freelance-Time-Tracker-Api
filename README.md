@@ -138,21 +138,29 @@ git clone https://github.com/jahid-we/Freelance-Time-Tracker-Api.git
 cd freelance-time-tracker
 
 
-**2 Install Dependencies**
-    composer install
+# 2. Install Dependencies
+composer install
 
-**3 Create .env file**
-    cp .env.example .env
+# 3. Create .env File
+cp .env.example .env
 
-**4 Generate App Key**
-    php artisan key:generate
+# 4. Generate App Key
+php artisan key:generate
 
-**5 Migrate Database**
-    php artisan migrate --seed
+# 5. Migrate and Seed Database
+php artisan migrate --seed
 
-**6 Start Queue Worker**
-    php artisan queue:work
+# 6. Start Queue Worker
+php artisan queue:work
 
-**7 Start Development Server**
-    php artisan serve
+# 7. Start Development Server
+php artisan serve
+
+```
+
+### 📬 Postman Collection
+
+> You can access and test the API endpoints using the following Postman collection:
+
+👉 [Click here to open the Postman Collection](https://www.postman.com/jahidhasan37/workspace/laravel-jahid/collection/32325662-ab500bb0-493d-4985-92a9-b706217905b7?action=share&creator=32325662&active-environment=32325662-1ca1441b-aa03-45ce-9924-a4616d2eb092)
 
