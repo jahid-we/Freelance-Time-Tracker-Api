@@ -8,6 +8,7 @@ use App\Models\Client;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class ClientController extends Controller
 {
@@ -28,6 +29,8 @@ class ClientController extends Controller
             ]);
 
             return ResponseHelper::Out(true, 'Client Created Successfully', 200);
+        } catch (ValidationException $e) {
+            return ResponseHelper::Out(false, $e->errors(), 422);
         } catch (Exception $e) {
             return ResponseHelper::Out(false, 'Client Creation Failed, Please Try Again.', 500);
         }
@@ -83,6 +86,8 @@ class ClientController extends Controller
             ]);
 
             return ResponseHelper::Out(true, 'Client Updated Successfully', 200);
+        } catch (ValidationException $e) {
+            return ResponseHelper::Out(false, $e->errors(), 422);
         } catch (Exception $e) {
             return ResponseHelper::Out(false, 'Client Update Failed, Please Try Again.', 500);
         }

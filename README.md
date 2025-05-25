@@ -71,8 +71,15 @@ This is a RESTful API built with Laravel that allows freelancers to track and ma
 - `POST /api/update-timelog/{id}` — Update a time log.
 - `DELETE /api/delete-timelog/{id}` — Delete a time log.
 - `DELETE /api/delete-all-timelogs` — Delete all time logs.
-- `GET /api/timelog/search?date=YYYY-MM-DD` — Search time logs with a date.
-- `GET /api/timelog/search?from=YYYY-MM-DD&to=YYYY-MM-DD` — Search time logs within a date range.
+
+### 📊 Reports
+
+- `GET /api/report?date=YYYY-MM-DD` — Get all time logs for a specific date.
+- `GET /api/report?client_id=id&date=YYYY-MM-DD` — Get time logs for a specific client on a specific date.
+- `GET /api/report?project_id=id&date=YYYY-MM-DD` — Get time logs for a specific project on a specific date.
+- `GET /api/report?from=YYYY-MM-DD&to=YYYY-MM-DD` — Get time logs within a specific date range.
+- `GET /api/report?client_id=id&from=YYYY-MM-DD&to=YYYY-MM-DD` — Get time logs for a specific client within a date range.
+- `GET /api/report?project_id=id&from=YYYY-MM-DD&to=YYYY-MM-DD` — Get time logs for a specific project within a date range.
 
 > ⏰ Note: If a user logs more than 8 hours in a single day (via start, manual entry, or update), an email notification is automatically queued and sent.
 

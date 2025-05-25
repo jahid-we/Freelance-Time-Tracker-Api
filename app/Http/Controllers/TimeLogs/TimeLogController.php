@@ -4,6 +4,7 @@ namespace App\Http\Controllers\TimeLogs;
 
 use App\Helper\ResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Client;
 use App\Models\Project;
 use App\Models\TimeLog;
 use App\Notifications\DailyWorkLimitExceeded;
@@ -244,12 +245,39 @@ class TimeLogController extends Controller
     }
     // Delete All Time Logs End ***********************************
 
-
     // Search Time Logs By Per Day and Week Start *****************
     public function search(Request $request)
     {
         try {
+            if ($request->filled('client_id')) {
+                $clientExists = Client::where('id', $request->client_id)
+                    ->where('user_id', auth()->id())
+                    ->exists();
+
+                if (! $clientExists) {
+                    return ResponseHelper::Out(false, 'Client not found', 404);
+                }
+            }
+
+            if ($request->filled('project_id')) {
+                $projectExists = Project::where('id', $request->project_id)
+                    ->whereHas('client', fn ($q) => $q->where('user_id', auth()->id()))
+                    ->exists();
+
+                if (! $projectExists) {
+                    return ResponseHelper::Out(false, 'Project not found', 404);
+                }
+            }
+
             $query = TimeLog::query()->where('user_id', auth()->id());
+
+            if ($request->filled('client_id')) {
+                $query->whereHas('project', fn ($q) => $q->where('client_id', $request->client_id));
+            }
+
+            if ($request->filled('project_id')) {
+                $query->where('project_id', $request->project_id);
+            }
 
             if ($request->filled('date')) {
                 $query->whereDate('start_time', Carbon::parse($request->date));
@@ -260,9 +288,10 @@ class TimeLogController extends Controller
                 $to = Carbon::parse($request->to)->endOfDay();
                 $query->whereBetween('start_time', [$from, $to]);
             }
-            $logs = $query->with('project')->orderBy('start_time', 'desc')->get();
 
-            return ResponseHelper::Out(true, $logs, 200);
+            $totalHours = $query->sum('hours');
+
+            return ResponseHelper::Out(true, $totalHours, 200);
 
         } catch (Exception $e) {
             return ResponseHelper::Out(false, 'Failed to search time logs', 500);

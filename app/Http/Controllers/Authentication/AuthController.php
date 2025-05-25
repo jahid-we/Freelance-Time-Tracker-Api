@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -29,6 +30,8 @@ class AuthController extends Controller
 
             return ResponseHelper::Out(true, 'Registration Successful', 200);
 
+        } catch (ValidationException $e) {
+            return ResponseHelper::Out(false, $e->errors(), 422);
         } catch (Exception $e) {
             return ResponseHelper::Out(false, 'Registration Failed, Please Try Again.', 500);
 
@@ -54,6 +57,8 @@ class AuthController extends Controller
             } else {
                 return ResponseHelper::Out(false, 'Invalid Credentials', 401);
             }
+        } catch (ValidationException $e) {
+            return ResponseHelper::Out(false, $e->errors(), 422);
         } catch (Exception $e) {
             return ResponseHelper::Out(false, 'Login Failed, Please Try Again.', 500);
         }

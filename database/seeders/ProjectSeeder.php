@@ -12,7 +12,7 @@ class ProjectSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             Project::create([
                 'client_id' => $i,
                 'title' => "Project for Client {$i}",

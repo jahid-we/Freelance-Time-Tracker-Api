@@ -12,7 +12,7 @@ class timeLogSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= 5; $i++) {
             TimeLog::create([
                 'user_id' => 1,
                 'project_id' => $i,
