@@ -8,6 +8,7 @@ use App\Models\Client;
 use App\Models\Project;
 use App\Models\TimeLog;
 use App\Notifications\DailyWorkLimitExceeded;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -298,4 +299,63 @@ class TimeLogController extends Controller
         }
     }
     // Search Time Logs By Per Day and Week End *****************
+
+    // Time Log Pdf Start ***********************************
+    public function exportTimeLogs(Request $request)
+    {
+        try {
+            if ($request->filled('client_id')) {
+                $clientExists = Client::where('id', $request->client_id)
+                    ->where('user_id', auth()->id())
+                    ->exists();
+
+                if (! $clientExists) {
+                    return ResponseHelper::Out(false, 'Client not found', 404);
+                }
+            }
+
+            if ($request->filled('project_id')) {
+                $projectExists = Project::where('id', $request->project_id)
+                    ->whereHas('client', fn ($q) => $q->where('user_id', auth()->id()))
+                    ->exists();
+
+                if (! $projectExists) {
+                    return ResponseHelper::Out(false, 'Project not found', 404);
+                }
+            }
+
+            $query = TimeLog::query()->where('user_id', auth()->id());
+
+            if ($request->filled('client_id')) {
+                $query->whereHas('project', fn ($q) => $q->where('client_id', $request->client_id));
+            }
+
+            if ($request->filled('project_id')) {
+                $query->where('project_id', $request->project_id);
+            }
+
+            if ($request->filled('date')) {
+                $query->whereDate('start_time', Carbon::parse($request->date));
+            }
+
+            if ($request->filled('from') && $request->filled('to')) {
+                $from = Carbon::parse($request->from)->startOfDay();
+                $to = Carbon::parse($request->to)->endOfDay();
+                $query->whereBetween('start_time', [$from, $to]);
+            }
+
+            if ($request->filled('tag')) {
+                $query->where('tags', $request->tag);
+            }
+
+            $logs = $query->with('project.client')->get();
+
+            $pdf = Pdf::loadView('pdf.time_logs', compact('logs'));
+
+            return $pdf->stream('time_logs_report.pdf');
+
+        } catch (Exception $e) {
+            return ResponseHelper::Out(false, 'Failed to search time logs', 500);
+        }
+    }
 }

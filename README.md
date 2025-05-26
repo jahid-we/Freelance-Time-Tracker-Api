@@ -81,6 +81,18 @@ This is a RESTful API built with Laravel that allows freelancers to track and ma
 - `GET /api/report?client_id=id&from=YYYY-MM-DD&to=YYYY-MM-DD` — Get time logs for a specific client within a date range.
 - `GET /api/report?project_id=id&from=YYYY-MM-DD&to=YYYY-MM-DD` — Get time logs for a specific project within a date range.
 
+### 📊 Reports PDF
+
+- `GET /api/export-pdf` — Get all time logs.
+- `GET /api/export-pdf?date=YYYY-MM-DD` — Get all time logs for a specific date.
+- `GET /api/export-pdf?client_id=id&date=YYYY-MM-DD` — Get time logs for a specific client on a specific date.
+- `GET /api/export-pdf?project_id=id&date=YYYY-MM-DD` — Get time logs for a specific project on a specific date.
+- `GET /api/export-pdf?from=YYYY-MM-DD&to=YYYY-MM-DD` — Get time logs within a specific date range.
+- `GET /api/export-pdf?client_id=id&from=YYYY-MM-DD&to=YYYY-MM-DD` — Get time logs for a specific client within a date range.
+- `GET /api/export-pdf?project_id=id&from=YYYY-MM-DD&to=YYYY-MM-DD` — Get time logs for a specific project within a date range.
+- `GET /api/export-pdf?tag=billable` — Get time logs for the `billable` tag.
+- `GET /api/export-pdf?tag=non-billable` — Get time logs for the `non-billable` tag.
+
 > ⏰ Note: If a user logs more than 8 hours in a single day (via start, manual entry, or update), an email notification is automatically queued and sent.
 
 

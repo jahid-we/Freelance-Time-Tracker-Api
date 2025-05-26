@@ -55,5 +55,6 @@ Route::middleware('auth:sanctum')->controller(TimeLogController::class)->group(f
     Route::delete('/delete-timelog/{id}', 'delete')->name('delete-timelog');
     Route::delete('/delete-all-timelogs', 'deleteAll')->name('delete-all-timelogs');
     Route::get('/report', 'search')->name('timelog.search');
+    Route::get('/export-pdf', 'exportTimeLogs')->name('export-pdf');
 
 });
