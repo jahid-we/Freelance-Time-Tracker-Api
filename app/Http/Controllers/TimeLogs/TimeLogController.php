@@ -358,4 +358,5 @@ class TimeLogController extends Controller
             return ResponseHelper::Out(false, 'Failed to search time logs', 500);
         }
     }
+    // Time Log Pdf End ***********************************
 }
