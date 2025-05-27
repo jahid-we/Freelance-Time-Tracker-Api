@@ -11,16 +11,17 @@ use Illuminate\Support\Facades\Route;
 // Uses Laravel Sanctum for API token authentication
 // ==================================================
 
+
 // =====================================================
 // =============== Authentication Routes ===============
 // =====================================================
-
 Route::middleware('guest')->controller(AuthController::class)->group(function () {
 
     Route::post('/register', 'register')->name('register');
     Route::post('/login', 'login')->name('login');
 
 });
+
 
 // =====================================================
 // =============== Protected Auth Routes ===============
@@ -31,10 +32,10 @@ Route::middleware('auth:sanctum')->controller(AuthController::class)->group(func
 
 });
 
+
 // =====================================================
 // =============== Client Routes =======================
 // =====================================================
-
 Route::middleware('auth:sanctum')->controller(ClientController::class)->group(function () {
 
     Route::post('/create-client', 'createClient')->name('create-client');
@@ -46,10 +47,10 @@ Route::middleware('auth:sanctum')->controller(ClientController::class)->group(fu
 
 });
 
+
 // =====================================================
 // =============== Project Routes ======================
 // =====================================================
-
 Route::middleware('auth:sanctum')->controller(ProjectController::class)->group(function () {
 
     Route::post('/create-project', 'createProject')->name('create-project');
@@ -62,6 +63,7 @@ Route::middleware('auth:sanctum')->controller(ProjectController::class)->group(f
 
 });
 
+
 // =====================================================
 // =============== Time Log Related Routes =============
 // =====================================================
@@ -71,6 +73,7 @@ Route::middleware('auth:sanctum')->controller(TimeLogController::class)->group(f
     Route::post('/end-timelog/{projectId}', 'end')->name('end-timelog');
 
     Route::post('/manual-entry/{projectId}', 'manualEntry')->name('manual-entry');
+
     Route::get('/get-timelogs', 'getTimeLogs')->name('get-timelogs');
     Route::get('/get-timelog/{id}', 'getTimeLogById')->name('get-timelog');
     Route::post('/update-timelog/{id}', 'update')->name('update-timelog');
