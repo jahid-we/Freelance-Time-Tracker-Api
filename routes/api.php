@@ -6,7 +6,14 @@ use App\Http\Controllers\Projects\ProjectController;
 use App\Http\Controllers\TimeLogs\TimeLogController;
 use Illuminate\Support\Facades\Route;
 
-// Route::controller()->group(function () {});
+// ==================================================
+// API Route Definitions for Freelance Time Tracker
+// Uses Laravel Sanctum for API token authentication
+// ==================================================
+
+// =====================================================
+// =============== Authentication Routes ===============
+// =====================================================
 
 Route::middleware('guest')->controller(AuthController::class)->group(function () {
 
@@ -15,11 +22,18 @@ Route::middleware('guest')->controller(AuthController::class)->group(function ()
 
 });
 
+// =====================================================
+// =============== Protected Auth Routes ===============
+// =====================================================
 Route::middleware('auth:sanctum')->controller(AuthController::class)->group(function () {
 
     Route::post('/logout', 'logout')->name('logout');
 
 });
+
+// =====================================================
+// =============== Client Routes =======================
+// =====================================================
 
 Route::middleware('auth:sanctum')->controller(ClientController::class)->group(function () {
 
@@ -31,6 +45,10 @@ Route::middleware('auth:sanctum')->controller(ClientController::class)->group(fu
     Route::delete('/delete-all-clients', 'deleteAllClients')->name('delete-all-clients');
 
 });
+
+// =====================================================
+// =============== Project Routes ======================
+// =====================================================
 
 Route::middleware('auth:sanctum')->controller(ProjectController::class)->group(function () {
 
@@ -44,17 +62,25 @@ Route::middleware('auth:sanctum')->controller(ProjectController::class)->group(f
 
 });
 
+// =====================================================
+// =============== Time Log Related Routes =============
+// =====================================================
 Route::middleware('auth:sanctum')->controller(TimeLogController::class)->group(function () {
 
     Route::post('/start-timelog/{projectId}', 'start')->name('start-timelog');
     Route::post('/end-timelog/{projectId}', 'end')->name('end-timelog');
+
     Route::post('/manual-entry/{projectId}', 'manualEntry')->name('manual-entry');
     Route::get('/get-timelogs', 'getTimeLogs')->name('get-timelogs');
     Route::get('/get-timelog/{id}', 'getTimeLogById')->name('get-timelog');
     Route::post('/update-timelog/{id}', 'update')->name('update-timelog');
     Route::delete('/delete-timelog/{id}', 'delete')->name('delete-timelog');
     Route::delete('/delete-all-timelogs', 'deleteAll')->name('delete-all-timelogs');
+
+    // Report Route (search or filter time logs)
     Route::get('/report', 'search')->name('timelog.search');
+
+    // Export PDF Route (generates a downloadable report)
     Route::get('/export-pdf', 'exportTimeLogs')->name('export-pdf');
 
 });
