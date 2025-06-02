@@ -189,4 +189,20 @@ This ensures that requests like POST, PUT, and DELETE can be made without needin
 > 🔒 Important: For production or continued development, please make sure to re-enable CSRF protection by updating or removing the exception list.
 ---
 
-© 2025 SKIFF Technologies. Developed by Jahid Hasan. All rights reserved.
+## 🧑‍💻 Developer
+
+**Made by**: Jahid Hasan  
+**Stack**: Laravel 12, Inertia, Vue, Bootstrap 5
+
+---
+
+## License
+
+This project is open-sourced under the [MIT license](LICENSE).
+
+### বাংলা লাইসেন্স (Bangla License)
+
+আপনি এই প্রকল্পটি [MIT লাইসেন্সের অধীনে](LICENSE_BN.txt) ওপেন সোর্স হিসেবে ব্যবহার করতে পারবেন।
+
+> © 2025 Jahid Hasan. All rights reserved.
+
