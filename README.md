@@ -192,7 +192,7 @@ This ensures that requests like POST, PUT, and DELETE can be made without needin
 ## 🧑‍💻 Developer
 
 **Made by**: Jahid Hasan  
-**Stack**: Laravel 12, Inertia, Vue, Bootstrap 5
+**Stack**: Laravel 12
 
 ---
 
